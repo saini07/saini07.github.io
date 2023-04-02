@@ -207,7 +207,9 @@
           url: "https://cors-anywhere.herokuapp.com/http://wave.ttu.edu/ajax.php",
           type: "POST",
           headers: {
-            "X-Requested-With": "XMLHttpRequest"
+            "X-Requested-With": "XMLHttpRequest",
+            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allo-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
           },
           data: {
             action: "getQuery",
