@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Simple ASP Website</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src='//www.aa.com/jquery.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+    crossorigin="anonymous"></script>
+
+  <script src="fuzzyset.js"></script>
+
+  <style>
+    #voice-input-btn {
+      background-color: darkseagreen;
+      border: none;
+      color: white;
+      padding: 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+
+    #answer-box {
+      border: 1px solid black;
+      padding: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body style="background-image: url('classroom_image.jpg'); background-repeat: no-repeat;background-attachment: fixed;
+  background-size: cover; ">
+  <div
+    style="text-align:center; background-color:white; width:fit-content; margin:auto; padding: 0.5cm 0.5cm 0.8cm 0.5cm;border-radius:4mm; margin-top:0.5cm;">
+
+    <h2>Ask a Question</h2>
+    <button id="voice-input-btn"><i class="fa fa-microphone"></i></button>
+    <input type="text" id="text-input" placeholder="Type your question...">
+    <!-- <button id="submit-btn">Submit</button> -->
+    <button type="button" class="btn btn-primary" id="submit-btn">Submit</button>
+    <div id="answer"></div>
+    <div id="answer-box"></div>
+  </div>
+
+  <script>
+
+    var isClose = true;
+    const stopwords = ["of", "the", "a", "an", "any", "is", "can", "who", "what", "why", "whom"];
+    var editor = "sorts\n" +
+      "    #cap = {littleRock,batonRouge,oklahomaCity,austin}.\n" +
+      "    #state = {arkansas,louisiana,oklahoma,texas}.\n" +
+      "    #re = {westSouthCentral}.\n"+
+      "predicates\n" +
+      "    capital(#cap, #state).\n" +
+      "    regionOf(#state,#re).\n" +
+      "    stateOfwestSouthCentral(#state).\n" +
+      "rules\n" +
+      "    capital(littleRock, arkansas).\n" +
+      "    capital(batonRouge, louisiana).\n" +
+      "    capital(oklahomaCity, oklahoma).\n" +
+      "    capital(austin, texas).\n" +
+      "    regionOf(arkansas,westSouthCentral).\n" +
+      "    regionOf(louisiana,westSouthCentral).\n" +
+      "    regionOf(oklahoma,westSouthCentral).\n" +
+      "    regionOf(texas,westSouthCentral).\n" +
+      "    stateOfwestSouthCentral(arkansas).\n" +
+      "    stateOfwestSouthCentral(louisiana).\n" +
+      "    stateOfwestSouthCentral(oklahoma).\n" +
+      "    stateOfwestSouthCentral(texas).\n";
+    // sorts
+    var contstring = editor.split("sorts\n")[1].split("predicates\n");
+    var sortstring = contstring[0].split('.');
+    sortstring.splice(-1, 1);
+    var sorts = {};
+    sortstring = sortstring.map(d => d.replace(/\n/g, '').trim()).forEach(d => {
+      var par = d.split("=");
+      sorts[par[0].replace(/#/, '').trim()] = par[1].replace(/{|}/g, '').split(',').map(w => w.trim())
+    });
+    // predicates
+    var predicates = {};
+    contstring = contstring[1].split("rules\n");
+    sortstring = contstring[0].split('.');
+    sortstring.splice(-1, 1);
+    sortstring.forEach(d => {
+      var part = d.replace(/\n/g, '').trim().split('(');
+      var func = part[0];
+      predicates[func] = {};
+      var par = part[1].split(',').map(e => e.replace(/#|\)/g, '').trim());
+      var par1 = sorts[par[0]].slice();
+      par1.push("X");
+      par.splice(0, 1);
+      par1.forEach(e => {
+        var strinh = (e == 'X' ? '' : (e + ' ')) + func;
+        predicates[func][strinh] = func + "(" + e + ")";
+        par.forEach(par2 => {
+          var temp = sorts[par2].slice();
+          temp.push("X");
+          temp.forEach(t => {
+            var strinh = (e == 'X' ? '' : (e + ' ')) + func + (t == 'X' ? '' : (' ' + t));
+            // if (strinh != fubnc)
+            predicates[func][strinh] = func + "(" + e + "," + t + ")";
+          })
+        });
+      });
+    });
+
+
+    var all_predicates = [];
+    for (var key1 in predicates) {
+      if (predicates.hasOwnProperty(key1)) {
+        for (var key2 in predicates[key1]) {
+          if (predicates[key1].hasOwnProperty(key2))
+            all_predicates.push(key2);
+        }
+      }
+
+    }
+    all_predicates.push('speak spanish'); // extra terms
+    a = FuzzySet(all_predicates);
+
+    //console.log(all_predicates)
+
+
+    // Speech recognition API
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+
+    // Get DOM elements
+    const answerDiv = document.querySelector('#answer');
+    const voiceBtn = document.getElementById('voice-input-btn');
+    const textInput = document.getElementById('text-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const answerBox = document.getElementById('answer-box');
+
+    submitBtn.addEventListener('click', () => {
+      console.log(textInput.value);
+      const question = textInput.value;
+      if (question.trim() === '') {
+        answerBox.innerHTML = 'Please ask a question.';
+        return;
+      }
+      var trim_script = question.split(" ");
+      trim_script = trim_script.filter(f => !stopwords.includes(f));
+      var queryQues = a.get(trim_script.join(" "), null, 0.5);
+      getAnswer(queryQues);
+
+    });
+
+    // Handle speech recognition
+    recognition.onresult = event => {
+      const resultIndex = event.resultIndex;
+      const transcript = event.results[resultIndex][0].transcript;
+      textInput.value = transcript;
+
+      var trim_script = transcript.split(" ");
+      trim_script = trim_script.filter(f => !stopwords.includes(f));
+      var queryQues = a.get(trim_script.join(" "), null, 0.5);
+      console.log(queryQues, 170);
+      getAnswer(queryQues);
+    };
+
+    // Handle click on voice input button     
+    function startSpeechRecognition() {
+      recognition.start();
+    }
+    voiceBtn.addEventListener('click', startSpeechRecognition);
+
+
+    function getAnswer(question) {
+
+      if (question != null) {
+        var mainkey = question[0][1].replace('speak ', '');
+        var answerarr = mainkey.split(' ');
+        var key1 = '';
+        answerarr.forEach(d => {
+          key1 = (predicates[d] != undefined) ? d : key1;
+        });
+        //var key1 = answerarr.length>2? answerarr[1]:answerarr[0];
+        var key2 = mainkey;
+        //console.log(key1 + '-' + key2);
+        //console.log(predicates[key1][key2]);
+
+        var data = {
+          'action': "getQuery",
+          'query': predicates[key1][key2],
+          'editor': editor
+        };
+
+        console.log(data, 201)
+
+
+
+        $.ajax({
+          url: "https://cors-anywhere.herokuapp.com/http://wave.ttu.edu/ajax.php",
+          type: "POST",
+          headers: {
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          data: {
+            action: "getQuery",
+            query: predicates[key1][key2],
+            editor: editor
+          },
+          success: function (response) {
+            console.log(response, 217);
+            const answer = response || 'Sorry, I could not find an answer.';
+            answerDiv.innerHTML = answer;
+            answerBox.innerHTML = answer;
+          },
+          error: function (xhr, status, error) {
+            console.log("error: " + error);
+          }
+        });
+      }
+    }
+
+
+
+  </script>
+</body>
+
+</html>
