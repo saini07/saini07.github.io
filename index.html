@@ -19,7 +19,7 @@
 
   <style>
     #voice-input-btn {
-      background-color: darkseagreen;
+      background-color: green;
       border: none;
       color: white;
       padding: 10px;
@@ -27,9 +27,11 @@
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
-      margin: 4px 2px;
+      margin: 4px 4px;
       cursor: pointer;
       border-radius: 50%;
+      height: fit-content;
+      width: 40px;
     }
 
     #answer-box {
@@ -42,7 +44,7 @@
 
 <body style="background-image: url('classroom_image.jpg'); background-repeat: no-repeat;background-attachment: fixed;
   background-size: cover; ">
-  <div
+  <div class="container"
     style="text-align:center; background-color:white; width:fit-content; margin:auto; padding: 0.5cm 0.5cm 0.8cm 0.5cm;border-radius:4mm; margin-top:0.5cm;">
 
     <h2>Ask a Question</h2>
@@ -57,28 +59,333 @@
   <script>
 
     var isClose = true;
-    const stopwords = ["of", "the", "a", "an", "any", "is", "can", "who", "what", "why", "whom"];
+    const stopwords = ["of", "the", "a", "an", "any", "is", "in", "can", "who", "what", "why", "whom"];
     var editor = "sorts\n" +
-      "    #cap = {littleRock,batonRouge,oklahomaCity,austin}.\n" +
-      "    #state = {arkansas,louisiana,oklahoma,texas}.\n" +
-      "    #re = {westSouthCentral}.\n"+
-      "predicates\n" +
-      "    capital(#cap, #state).\n" +
-      "    regionOf(#state,#re).\n" +
-      "    stateOfwestSouthCentral(#state).\n" +
-      "rules\n" +
-      "    capital(littleRock, arkansas).\n" +
-      "    capital(batonRouge, louisiana).\n" +
-      "    capital(oklahomaCity, oklahoma).\n" +
-      "    capital(austin, texas).\n" +
-      "    regionOf(arkansas,westSouthCentral).\n" +
-      "    regionOf(louisiana,westSouthCentral).\n" +
-      "    regionOf(oklahoma,westSouthCentral).\n" +
-      "    regionOf(texas,westSouthCentral).\n" +
-      "    stateOfwestSouthCentral(arkansas).\n" +
-      "    stateOfwestSouthCentral(louisiana).\n" +
-      "    stateOfwestSouthCentral(oklahoma).\n" +
-      "    stateOfwestSouthCentral(texas).\n";
+    "    #state = {alabama,alaska,arizona,arkansas,california,colorado,connecticut,delaware,florida,georgia,hawaii,idaho,illinois,indiana,iowa,kansas,kentucky,louisiana,maine,maryland,massachusetts,michigan,minnesota,mississippi,missouri,montana,nebraska,nevada,newHampshire,newJersey,newMexico,newYork,northCarolina,northDakota,ohio,oklahoma,oregon,pennsylvania,rhodeIsland,southCarolina,southDakota,tennessee,texas,utah,vermont,virginia,washington,westVirginia,wisconsin,wyoming}.\n" +
+    "	   #abb = {al,ak,az,ar,ca,co,ct,de,fl,ga,hi,id,il,in,ia,ks,ky,la,me,md,ma,mi,mn,ms,mo,mt,ne,nv,nh,nj,nm,ny,nc,nd,oh,ok,pa,ri,sc,sd,tn,tx,ut,vt,va,wa,wv,wi,wy,oR}.\n" +
+    "    #cap = {montgomery,juneau,phoenix,littleRock,sacramento,denver,hartford,dover,tallahassee,atlanta,honolulu,boise,springfield,indianapolis,desMoines,topeka,frankfort,batonRouge,augusta,annapolis,boston,lansing,saintPaul,jackson,jeffersonCity,helena,lincoln,carsonCity,concord,trenton,santaFe,albany,raleigh,bismarck,columbus,oklahomaCity,salem,harrisburg,providence,columbia,pierre,nashville,austin,saltLakeCity,montpelier,richmond,olympia,charleston,madison,cheyenne}.\n" +
+    "    #lc = {huntsville,anchorage,phoenix,littleRock,losAngeles,denver,bridgeport,wilmington,jacksonville,atlanta,honolulu,boise,chicago,indianapolis,desMoines,wichita,louisville,newOrleans,portland,baltimore,boston,detroit,minneapolis,jackson,kansasCity,billings,omaha,lasVegas,manchester,newark,albuquerque,newYorkCity,charlotte,fargo,columbus,oklahomaCity,portland,philadelphia,providence,charleston,siouxFalls,nashville,houston,saltLakeCity,burlington,virginiaBeach,seattle,charleston,milwaukee,cheyenne}.\n" +
+    "    #re = {northeast,southeast,midwest,southwest,west}.\n" +
+    "predicates\n" +
+    "    abbreviation(#abb, #state).\n" +
+    "    largestCity(#lc, #state).\n" +
+    "    capital(#cap, #state).\n" +
+    "    regionOf(#re, #state).\n" +
+    "    northeast(#state).\n" +
+    "    southeast(#state).\n" +
+    "    midwest(#state).\n" +
+    "    southwest(#state).\n" +
+    "    west(#state).\n" +
+    "    stateOfusa(#state).\n" +
+    "    stateOfwestSouthCentral(#state).\n" +
+    "rules\n" +
+    "    abbreviation(al, alabama).\n" +
+    "    abbreviation(ak, alaska).\n" +
+    "    abbreviation(az, arizona).\n" +
+    "    abbreviation(ar, arkansas).\n" +
+    "    abbreviation(ca, california).\n" +
+    "    abbreviation(co, colorado).\n" +
+    "    abbreviation(ct, connecticut).\n" +
+    "    abbreviation(de, delaware).\n" +
+    "    abbreviation(fl, florida).\n" +
+    "    abbreviation(ga, georgia).\n" +
+    "    abbreviation(hi, hawaii).\n" +
+    "    abbreviation(id, idaho).\n" +
+    "    abbreviation(il, illinois).\n" +
+    "    abbreviation(in, indiana).\n" +
+    "    abbreviation(ia, iowa).\n" +
+    "    abbreviation(ks, kansas). \n" +
+    "    abbreviation(ky, kentucky).\n" +
+    "    abbreviation(la, louisiana).\n" +
+    "    abbreviation(me, maine).\n" +
+    "    abbreviation(md, maryland).\n" +
+    "    abbreviation(ma, massachusetts).\n" +
+    "    abbreviation(mi, michigan).\n" +
+    "    abbreviation(mn, minnesota).\n" +
+    "    abbreviation(ms, missouri).\n" +
+    "    abbreviation(mt, montana).\n" +
+    "    abbreviation(ne, nebraska).\n" +
+    "    abbreviation(nv, nevada).\n" +
+    "    abbreviation(nh, newHampshire).\n" +
+    "    abbreviation(nj, newJersey).\n" +
+    "    abbreviation(nm, newMexico).\n" +
+    "    abbreviation(ny, newYork).\n" +
+    "    abbreviation(nc, northCarolina).\n" +
+    "    abbreviation(nd, northDakota).\n" +
+    "    abbreviation(oh, ohio).\n" +
+    "    abbreviation(ok, oklahoma).\n" +
+    "    abbreviation(oR, oregon).\n" +
+    "    abbreviation(pa, pennsylvania).\n" +
+    "    abbreviation(ri, rhodeIsland).\n" +
+    "    abbreviation(sc, southCarolina).\n" +
+    "    abbreviation(sd, southDakota).\n" +
+    "    abbreviation(tn, tennessee).\n" +
+    "    abbreviation(tx, texas).\n" +
+    "    abbreviation(ut, utah).\n" +
+    "    abbreviation(vt, vermont).\n" +
+    "    abbreviation(va, virginia).\n" +
+    "    abbreviation(wa, washington).\n" +
+    "    abbreviation(wv, westVirginia).\n" +
+    "    abbreviation(wi, wisconsin).\n" +
+    "    abbreviation(wy, wyoming).\n" +
+    "     largestCity(huntsville,alabama).\n" +
+    "     largestCity(anchorage,alaska).\n" +
+    "     largestCity(phoenix, arizona).\n" +
+    "     largestCity(littleRock,arkansas).\n" +
+    "     largestCity(losAngeles,california).\n" +
+    "     largestCity(denver,colorado).\n" +
+    "     largestCity(bridgeport,connecticut).\n" +
+    "     largestCity(wilmington,delaware).\n" +
+    "     largestCity(jacksonville,florida).\n" +
+    "     largestCity(atlanta,georgia).\n" +
+    "     largestCity(honolulu,hawaii).\n" +
+    "     largestCity(boise,idaho).\n" +
+    "     largestCity(chicago,illinois).\n" +
+    "     largestCity(indianapolis,indiana).\n" +
+    "     largestCity(desMoines,iowa).\n" +
+    "     largestCity(wichita,kansas).\n" +
+    "     largestCity(louisville,kentucky).\n" +
+    "     largestCity(newOrleans,louisiana).\n" +
+    "     largestCity(portland,maine).\n" +
+    "     largestCity(baltimore,maryland).\n" +
+    "     largestCity(boston,massachusetts).\n" +
+    "     largestCity(detroit,michigan).\n" +
+    "     largestCity(minneapolis,minnesota).\n" +
+    "     largestCity(jackson,mississippi).\n" +
+    "     largestCity(kansasCity,missouri).\n" +
+    "     largestCity(billings,montana).\n" +
+    "     largestCity(omaha,nebraska).\n" +
+    "     largestCity(lasVegas,nevada).\n" +
+    "     largestCity(manchester,newHampshire).\n" +
+    "     largestCity(newark,newJersey).\n" +
+    "     largestCity(albuquerque,newMexico).\n" +
+    "     largestCity(newYorkCity,newYork).\n" +
+    "     largestCity(charlotte,northCarolina).\n" +
+    "     largestCity(fargo,northDakota).\n" +
+    "     largestCity(columbus,ohio).\n" +
+    "     largestCity(oklahomaCity,oklahoma).\n" +
+    "     largestCity(portland,oregon).\n" +
+    "     largestCity(philadelphia,pennsylvania).\n" +
+    "     largestCity(providence,rhodeIsland).\n" +
+    "     largestCity(charleston,southCarolina).\n" +
+    "     largestCity(siouxFalls,southDakota).\n" +
+    "     largestCity(nashville,tennessee).\n" +
+    "     largestCity(houston,texas).\n" +
+    "     largestCity(saltLakeCity,utah).\n" +
+    "     largestCity(burlington,vermont).\n" +
+    "     largestCity(virginiaBeach,virginia).\n" +
+    "     largestCity(seattle,washington).\n" +
+    "     largestCity(charleston,westVirginia).\n" +
+    "     largestCity(milwaukee,wisconsin).\n" +
+    "     largestCity(cheyenne,wyoming).\n" +
+    "     capital(montgomery,alabama).\n" +
+    "     capital(juneau,alaska).\n" +
+    "     capital(phoenix,arizona).\n" +
+    "     capital(littleRock,arkansas).\n" +
+    "     capital(sacramento,california).\n" +
+    "     capital(denver,colorado).\n" +
+    "     capital(hartford,connecticut).\n" +
+    "     capital(dover,delaware).\n" +
+    "     capital(tallahassee,florida).\n" +
+    "     capital(atlanta,georgia).\n" +
+    "     capital(honolulu,hawaii).\n" +
+    "     capital(boise,idaho).\n" +
+    "     capital(springfield,illinois).\n" +
+    "     capital(indianapolis,indiana).\n" +
+    "     capital(desMoines,iowa).\n" +
+    "     capital(topeka,kansas).\n" +
+    "     capital(frankfort,kentucky).\n" +
+    "     capital(batonRouge,louisiana).\n" +
+    "     capital(augusta,maine).\n" +
+    "     capital(annapolis,maryland).\n" +
+    "     capital(boston,massachusetts).\n" +
+    "     capital(lansing,michigan).\n" +
+    "     capital(saintPaul,minnesota).\n" +
+    "     capital(jackson,mississippi).\n" +
+    "     capital(jeffersonCity,missouri).\n" +
+    "     capital(helena,montana).\n" +
+    "     capital(lincoln,nebraska).\n" +
+    "     capital(carsonCity,nevada).\n" +
+    "     capital(concord,newHampshire).\n" +
+    "     capital(trenton,newJersey).\n" +
+    "     capital(santaFe,newMexico).\n" +
+    "     capital(albany,newYork).\n" +
+    "     capital(raleigh,northCarolina).\n" +
+    "     capital(bismarck,northDakota).\n" +
+    "     capital(columbus,ohio).\n" +
+    "     capital(oklahomaCity,oklahoma).\n" +
+    "     capital(salem,oregon).\n" +
+    "     capital(harrisburg,pennsylvania).\n" +
+    "     capital(providence,rhodeIsland).\n" +
+    "     capital(columbia,southCarolina).\n" +
+    "     capital(pierre,southDakota).\n" +
+    "     capital(nashville,tennessee).\n" +
+    "     capital(austin,texas).\n" +
+    "     capital(saltLakeCity,utah).\n" +
+    "     capital(montpelier,vermont).\n" +
+    "     capital(richmond,virginia).\n" +
+    "     capital(olympia,washington).\n" +
+    "     capital(charleston,westVirginia).\n" +
+    "     capital(madison,wisconsin).\n" +
+    "     capital(cheyenne,wyoming).\n" +
+    "     northeast(newYork).\n" +
+    "     northeast(newJersey).\n" +
+    "     northeast(pennsylvania).\n" +
+    "     northeast(maine).\n" +
+    "     northeast(newHampshire).\n" +
+    "     northeast(vermont).\n" +
+    "     northeast(connecticut).\n" +
+    "     northeast(rhodeIsland).\n" +
+    "     northeast(massachusetts).\n" +
+    "     southeast(georgia).\n" +
+    "     southeast(northCarolina).\n" +
+    "     southeast(southCarolina).\n" +
+    "     southeast(virginia).\n" +
+    "     southeast(westVirginia).\n" +
+    "     southeast(kentucky).\n" +
+    "     southeast(tennessee).\n" +
+    "     southeast(mississippi).\n" +
+    "     southeast(alabama).\n" +
+    "     southeast(delaware).\n" +
+    "     southeast(maryland).\n" +
+    "     southeast(florida).\n" +
+    "     southeast(louisiana).\n" +
+    "     southeast(arkansas).\n" +
+    "     midwest(minnesota).\n" +
+    "     midwest(wisconsin).\n" +
+    "     midwest(illinois).\n" +
+    "     midwest(ohio).\n" +
+    "     midwest(indiana).\n" +
+    "     midwest(michigan).\n" +
+    "     midwest(missouri).\n" +
+    "     midwest(iowa).\n" +
+    "     midwest(kansas).\n" +
+    "     midwest(nebraska).\n" +
+    "     midwest(northDakota).\n" +
+    "     midwest(southDakota).\n" +
+    "     southwest(newMexico).\n" +
+    "     southwest(arizona).\n" +
+    "     southwest(oklahoma).\n" +
+    "     southwest(texas).\n" +
+    "     west(california).\n" +
+    "     west(colorado).\n" +
+    "     west(nevada).\n" +
+    "     west(hawaii).\n" +
+    "     west(alaska).\n" +
+    "     west(oregon).\n" +
+    "     west(utah).\n" +
+    "     west(idaho).\n" +
+    "     west(montana).\n" +
+    "     west(wyoming).\n" +
+    "     west(washington).\n" +
+    "     stateOfusa(alabama).\n" +
+    "     stateOfusa(alaska).\n" +
+    "     stateOfusa(arizona).\n" +
+    "     stateOfusa(arkansas).\n" +
+    "     stateOfusa(california).\n" +
+    "     stateOfusa(colorado).\n" +
+    "     stateOfusa(connecticut).\n" +
+    "     stateOfusa(delaware).\n" +
+    "     stateOfusa(florida).\n" +
+    "     stateOfusa(georgia).\n" +
+    "     stateOfusa(hawaii).\n" +
+    "     stateOfusa(idaho).\n" +
+    "     stateOfusa(illinois).\n" +
+    "     stateOfusa(indiana).\n" +
+    "     stateOfusa(iowa).\n" +
+    "     stateOfusa(kansas).\n" +
+    "     stateOfusa(kentucky).\n" +
+    "     stateOfusa(louisiana).\n" +
+    "     stateOfusa(maine).\n" +
+    "     stateOfusa(maryland).\n" +
+    "     stateOfusa(massachusetts).\n" +
+    "     stateOfusa(michigan).\n" +
+    "     stateOfusa(minnesota).\n" +
+    "     stateOfusa(mississippi).\n" +
+    "     stateOfusa(missouri).\n" +
+    "     stateOfusa(montana).\n" +
+    "     stateOfusa(nebraska).\n" +
+    "     stateOfusa(nevada).\n" +
+    "     stateOfusa(newHampshire).\n" +
+    "     stateOfusa(newJersey).\n" +
+    "     stateOfusa(newMexico).\n" +
+    "     stateOfusa(newYork).\n" +
+    "     stateOfusa(northCarolina).\n" +
+    "     stateOfusa(northDakota).\n" +
+    "     stateOfusa(ohio).\n" +
+    "     stateOfusa(oklahoma).\n" +
+    "     stateOfusa(oregon).\n" +
+    "     stateOfusa(pennsylvania).\n" +
+    "     stateOfusa(rhodeIsland).\n" +
+    "     stateOfusa(southCarolina).\n" +
+    "     stateOfusa(southDakota).\n" +
+    "     stateOfusa(tennessee).\n" +
+    "     stateOfusa(texas).\n" +
+    "     stateOfusa(utah).\n" +
+    "     stateOfusa(vermont).\n" +
+    "     stateOfusa(virginia).\n" +
+    "     stateOfusa(washington).\n" +
+    "     stateOfusa(westVirginia).\n" +
+    "     stateOfusa(wisconsin).\n" +
+    "     stateOfusa(wyoming).\n" +
+    "     regionOf(northeast,newYork).\n" +
+    "     regionOf(northeast,newJersey).\n" +
+    "     regionOf(northeast,pennsylvania).\n" +
+    "     regionOf(northeast,maine).\n" +
+    "     regionOf(northeast,newHampshire).\n" +
+    "     regionOf(northeast,vermont).\n" +
+    "     regionOf(northeast,connecticut).\n" +
+    "     regionOf(northeast,rhodeIsland).\n" +
+    "     regionOf(northeast,massachusetts).\n" +
+    "     regionOf(southeast,georgia).\n" +
+    "     regionOf(southeast,northCarolina).\n" +
+    "     regionOf(southeast,southCarolina).\n" +
+    "     regionOf(southeast,virginia).\n" +
+    "     regionOf(southeast,westVirginia).\n" +
+    "     regionOf(southeast,kentucky).\n" +
+    "     regionOf(southeast,tennessee).\n" +
+    "     regionOf(southeast,mississippi).\n" +
+    "     regionOf(southeast,alabama).\n" +
+    "     regionOf(southeast,delaware).\n" +
+    "     regionOf(southeast,maryland).\n" +
+    "     regionOf(southeast,florida).\n" +
+    "     regionOf(southeast,louisiana).\n" +
+    "     regionOf(southeast,arkansas).\n" +
+    "     regionOf(midwest,minnesota).\n" +
+    "     regionOf(midwest,wisconsin).\n" +
+    "     regionOf(midwest,illinois).\n" +
+    "     regionOf(midwest,ohio).\n" +
+    "     regionOf(midwest,indiana).\n" +
+    "     regionOf(midwest,michigan).\n" +
+    "     regionOf(midwest,missouri).\n" +
+    "     regionOf(midwest,iowa).\n" +
+    "     regionOf(midwest,kansas).\n" +
+    "     regionOf(midwest,nebraska).\n" +
+    "     regionOf(midwest,northDakota).\n" +
+    "     regionOf(midwest,southDakota).\n" +
+    "     regionOf(southwest,newMexico).\n" +
+    "     regionOf(southwest,arizona).\n" +
+    "     regionOf(southwest,oklahoma).\n" +
+    "     regionOf(southwest,texas).\n" +
+    "     regionOf(west,california).\n" +
+    "     regionOf(west,colorado).\n" +
+    "     regionOf(west,nevada).\n" +
+    "     regionOf(west,hawaii).\n" +
+    "     regionOf(west,alaska).\n" +
+    "     regionOf(west,oregon).\n" +
+    "     regionOf(west,utah).\n" +
+    "     regionOf(west,idaho).\n" +
+    "     regionOf(west,montana).\n" +
+    "     regionOf(west,wyoming).\n" +
+    "     regionOf(west,washington).\n" +
+
+    "     stateOfwestSouthCentral(arkansas).\n" +
+    "     stateOfwestSouthCentral(louisiana).\n" +
+    "     stateOfwestSouthCentral(oklahoma).\n" +
+    "     stateOfwestSouthCentral(texas).\n";
+
+
+
     // sorts
     var contstring = editor.split("sorts\n")[1].split("predicates\n");
     var sortstring = contstring[0].split('.');
@@ -116,7 +423,7 @@
       });
     });
 
-
+    console.log(predicates)
     var all_predicates = [];
     for (var key1 in predicates) {
       if (predicates.hasOwnProperty(key1)) {
@@ -129,7 +436,7 @@
     }
     all_predicates.push('speak spanish'); // extra terms
     a = FuzzySet(all_predicates);
-
+    console.log(a)
     //console.log(all_predicates)
 
 
@@ -153,8 +460,11 @@
         return;
       }
       var trim_script = question.split(" ");
+      console.log(question)
       trim_script = trim_script.filter(f => !stopwords.includes(f));
+      console.log(trim_script)
       var queryQues = a.get(trim_script.join(" "), null, 0.5);
+      console.log(queryQues)
       getAnswer(queryQues);
 
     });
@@ -183,16 +493,22 @@
 
       if (question != null) {
         var mainkey = question[0][1].replace('speak ', '');
+        console.log(mainkey)
         var answerarr = mainkey.split(' ');
+        console.log(answerarr)
         var key1 = '';
         answerarr.forEach(d => {
+          console.log(d)
+          console.log(predicates[d])
           key1 = (predicates[d] != undefined) ? d : key1;
+          console.log(key1)
         });
+        console.log(key1)
         //var key1 = answerarr.length>2? answerarr[1]:answerarr[0];
         var key2 = mainkey;
         //console.log(key1 + '-' + key2);
         //console.log(predicates[key1][key2]);
-
+        console.log(key2)
         var data = {
           'action': "getQuery",
           'query': predicates[key1][key2],
@@ -208,7 +524,7 @@
           type: "POST",
           headers: {
             "X-Requested-With": "XMLHttpRequest",
-            "Access-Control-Allow-Origin":"*",
+            "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, PATCH, DELETE, OPTIONS"
           },
           data: {
@@ -219,8 +535,18 @@
           success: function (response) {
             console.log(response, 217);
             const answer = response || 'Sorry, I could not find an answer.';
-            answerDiv.innerHTML = answer;
-            answerBox.innerHTML = answer;
+            //answerDiv.innerHTML = answer;
+            //answerBox.innerHTML = answer;
+            //const answer_new = answer.split(predicates[key1][key2]).join(" ");
+            //console.log(answer.split("<p")[1].split("<br"))
+            var answer_new = answer.split("<p")[1].split("<br")[0].split(">")[1];
+            if (answer_new.includes("X")) {
+              answer_new = answer_new.split("X =")[1]
+            }
+            answer_new = answer_new.trim();
+            answer_new = answer_new.charAt(0).toUpperCase() + answer_new.slice(1)
+            answerDiv.innerHTML = "<p> The answer to your query is " + "<span style='color:green'>" + answer_new + "</span></p>";
+            answerBox.innerHTML = "<p> The answer to your query is " + "<span style='color:green'>" + answer_new + "</span></p>";
           },
           error: function (xhr, status, error) {
             console.log("error: " + error);
