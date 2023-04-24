@@ -6,15 +6,14 @@
   <title>Simple ASP Website</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="style.css">
+  <link href='https://unpkg.com/css.gg@2.0.0/icons/css/home.css' rel='stylesheet'>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script src='//www.aa.com/jquery.js'></script>
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
     crossorigin="anonymous"></script>
-
   <script src="fuzzyset.js"></script>
 
   <style>
@@ -42,22 +41,103 @@
   </style>
 </head>
 
-<body style="background-image: url('classroom_image.jpg'); background-repeat: no-repeat;background-attachment: fixed;
-  background-size: cover; ">
-  <div class="container">
-    <div style="text-align:center; background-color:white; width:fit-content; margin:auto; padding: 0.5cm 0.5cm 0.8cm 0.5cm;border-radius:4mm; margin-top:0.5cm;">
-      <h2>Ask a Question</h2>
+<body onload="showDiv('discover')" style="font-family: 'Times New Roman', Times, serif;">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top" style="padding-left: 20px;">
+    <!-- Navbar content -->
+    <a class="navbar-brand active" href="#discover">
+      <i class="gg-home"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#discover">Discover <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#example">Examples</a>
+        </li>
+      </ul>
+    </div>
+  </nav>  
+  
+  <div class="nav-content" id="discover">
+    <img src="statue_of_liberty.jpg" alt="statue of liberty" style="width:100%" class="responsive">
+    <div class="bottom-left">
+      <h2 style="color: darkblue">DISCOVER AMERICA</h2>
+      <h5>Explore State Capitals and Largest Cities</h5>
+      <!-- <p style="width:40%">Welcome to Discover America, explore the state capitals 
+        and largest cities of the United States! </p> -->
+      <button type="button" class="btn btn-primary" style="border-radius: 3rem; margin-top: 10px;" onclick="scrollFunction1()">Get Started!!!</button>  
+    </div>
+    <div id="search-box" style="text-align:center; padding: 0.5cm 0.5cm 0.8cm 0.5cm; margin-top:0.5cm;">
+      <!-- <h2>Ask a Question</h2> -->
+      <p align="justify">Welcome to Discover America, Explore the state capitals and 
+        largest cities of the United States! Whether you're a student, a traveler, or simply a 
+        curious citizen, our platform is designed to help you discover new and interesting facts 
+        about America's diverse states and their iconic landmarks. With this appliction, 
+        you can easily search for information on state capitals, major cities, abbreviations to represent
+         states and the regions in which the states lie across the country. From the bustling streets of 
+         New York City to the rugged wilderness of Alaska, we've got you covered with up-to-date and
+          accurate data on each state's capital city and largest city in it. So why wait? Start exploring
+           today and discover all that America has to offer!</p>
       <button id="voice-input-btn"><i class="fa fa-microphone"></i></button>
       <input type="text" id="text-input" placeholder="Type your question...">
       <!-- <button id="submit-btn">Submit</button> -->
-      <button type="button" class="btn btn-primary" id="submit-btn">Submit</button>
+      <button type="button" class="btn btn-primary" style="border-radius: 3rem;" id="submit-btn"> <i class="fa fa-search"></i> Submit</button>
       <div id="answer"></div>
       <div id="answer-box"></div>
     </div>
   </div>
+  <div class="nav-content" id="example" >
+      <div style="padding: 10px 10px 10px 10px; width:fit-content">
+        <h5>Example Questions you can search to know about state capitals, abbreviations, largest cities, region of the states
+        </h5>
+        <p>1. What is the capital of Texas?</p>
+        <p>2. What is the abbreviation of Texas?</p>
+        <p>3. What is the largest city in Texas?</p>  
+        <p>4. Is austin capital of Texas?</p>
+        <p>5. what is the region of Texas?</p>
+        <p>6. Is TX abbreviation of Texas?</p>
+        <p>7. Is houston largest city in Texas?</p>
+        <p>8. Is the region of texas southwest?</p>
+        <p style="color:red; padding-top:20px">Note*: Similar type of questions can be applied to all 50 states present im USA</p>
+
+      </div>
+  </div>
 
   <script>
+    
+    var $content = $('.nav-content');
+    function showDiv(divName) {
+			var selector = document.getElementById('discover');
+      $content.hide();
+			$(selector).show();
+		}
+    
+    function showContent(selector) {
+      $content.hide();
+      $(selector).show();
+    }
 
+    $('.navbar-nav').on('click', '.nav-link', function(e) {
+      showContent(e.currentTarget.hash);
+      e.preventDefault();
+    }); 
+
+    function scrollFunction1() {
+      let e = document.getElementById("search-box");
+      e.scrollIntoView({
+        block: 'end',
+        behavior: 'smooth',
+        inline: 'center'
+      });
+    }
+  
+  </script>
+  
+  <script>
     var isClose = true;
     const stopwords = ["of", "the", "a", "an", "any", "is", "in", "can", "who", "what", "why", "whom"];
     var editor = "sorts\n" +
