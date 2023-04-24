@@ -534,6 +534,9 @@
 
     submitBtn.addEventListener('click', () => {
       console.log(textInput.value);
+      if(textInput.value!=null){
+        textInput.value=textInput.value.toLowerCase();
+      }
       const question = textInput.value;
       if (question.trim() === '') {
         answerBox.innerHTML = 'Please ask a question.';
